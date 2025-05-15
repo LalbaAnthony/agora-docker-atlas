@@ -80,7 +80,7 @@ services:
     networks:
       - app-network
 
-# Redis (Optional - for caching)
+# Redis ( for caching)
   redis:
     image: redis:alpine
     container_name: redis
