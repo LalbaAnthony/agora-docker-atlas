@@ -6,5 +6,19 @@
 ## Start
 
 ```bash
-docker-compose down ; docker-compose build --no-cache ; docker-compose up -d
+# Create necessary directories
+mkdir -p docker/nginx/conf.d docker/nginx/logs
+
+# Start the containers
+docker-compose up -d
+
+# Install Laravel dependencies (first time)
+docker-compose exec backend composer install
+
+# Run Laravel migrations
+docker-compose exec backend php artisan migrate
+
+# Access your applications
+# - Frontend: http://localhost:3000
+# - Backend API: http://localhost:80/api
 ```

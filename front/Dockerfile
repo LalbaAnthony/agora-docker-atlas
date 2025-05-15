@@ -1,3 +1,4 @@
+FROM node:18-alpine as build-stage
 
 # Set working directory
 WORKDIR /app
@@ -13,6 +14,14 @@ COPY . .
 
 # Build the application for production
 RUN npm run build
+
+# Production stage
+FROM node:18-alpine
+
+WORKDIR /app
+
+# Copy from build stage
+COPY --from=build-stage /app ./
 
 # Set environment variables
 ENV HOST=0.0.0.0
