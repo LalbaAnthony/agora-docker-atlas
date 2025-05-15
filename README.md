@@ -17,8 +17,4 @@ docker-compose exec backend composer install
 
 # Run Laravel migrations
 docker-compose exec backend php artisan migrate
-
-# Access your applications
-# - Frontend: http://localhost:3000
-# - Backend API: http://localhost:80/api
 ```
