@@ -1,0 +1,99 @@
+version: "3.8"
+
+services:
+  # Laravel Backend
+  backend:
+    build:
+      context: ./back
+      dockerfile: Dockerfile
+    container_name: laravel_app
+    restart: unless-stopped
+    volumes:
+      - ./back:/var/www/html
+      - ./back/vendor:/var/www/html/vendor
+    environment:
+      - APP_ENV=local
+      - DB_CONNECTION=mysql
+      - DB_HOST=db
+      - DB_PORT=3306
+      - DB_DATABASE=laravel
+      - DB_USERNAME=laraveluser
+      - DB_PASSWORD=secret
+    depends_on:
+      - db
+    networks:
+      - app-network
+
+  # Nuxt Frontend
+  frontend:
+    build:
+      context: ./front
+      dockerfile: Dockerfile
+    container_name: nuxt_app
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./front:/app
+      - /app/node_modules
+    environment:
+      - HOST=0.0.0.0
+      - PORT=3000
+      - API_URL=http://nginx:80
+    depends_on:
+      - backend
+      - nginx
+    networks:
+      - app-network
+
+  # Nginx Server
+  nginx:
+    image: nginx:alpine
+    container_name: nginx
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./back:/var/www/html
+      - ./docker/nginx/conf.d:/etc/nginx/conf.d
+      - ./docker/nginx/logs:/var/log/nginx
+    depends_on:
+      - backend
+    networks:
+      - app-network
+
+  # MySQL Database
+  db:
+    image: mysql:8.0
+    container_name: mysql_db
+    restart: unless-stopped
+    ports:
+      - "3306:3306"
+    environment:
+      - MYSQL_DATABASE=laravel
+      - MYSQL_USER=laraveluser
+      - MYSQL_PASSWORD=secret
+      - MYSQL_ROOT_PASSWORD=secret_root
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - app-network
+
+  # Redis (Optional - for caching)
+  redis:
+    image: redis:alpine
+    container_name: redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  mysql_data:
+    driver: local
