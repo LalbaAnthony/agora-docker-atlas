@@ -9,7 +9,7 @@ services:
     restart: unless-stopped
     volumes:
       - ./back:/var/www/html
-      - ./back/vendor:/var/www/html/vendor
+      - /var/www/html/vendor
     environment:
       - APP_ENV=local
       - DB_CONNECTION=mysql
@@ -35,6 +35,7 @@ services:
       - "3000:3000"
     volumes:
       - ./front:/app
+      # Important: Don't mount over the node_modules directory
       - /app/node_modules
     environment:
       - HOST=0.0.0.0
@@ -80,7 +81,7 @@ services:
     networks:
       - app-network
 
-# Redis ( for caching)
+# Redis (Optional - for caching)
   redis:
     image: redis:alpine
     container_name: redis

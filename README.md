@@ -6,11 +6,8 @@
 ## Start
 
 ```bash
-# Create necessary directories
-mkdir -p docker/nginx/conf.d docker/nginx/logs
-
-# Start the containers
-docker-compose up -d
+# Stop, build and start the containers
+docker-compose down -v ; docker-compose up --build -d
 
 # Install Laravel dependencies (first time)
 docker-compose exec backend composer install
