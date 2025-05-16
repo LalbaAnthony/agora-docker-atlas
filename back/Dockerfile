@@ -42,7 +42,6 @@ USER www-data
 # Create .env
 RUN if [ ! -f .env ]; then cp .env.example .env; fi
 RUN if [ ! -f .env ]; then touch .env; fi
-RUN if [ ! -f .env ]; then echo "APP_KEY=base64:$(openssl rand -base64 32)" >> .env; fi
 
 # Install dependencies
 RUN composer install --no-interaction --no-progress
