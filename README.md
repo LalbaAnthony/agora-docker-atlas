@@ -1,4 +1,4 @@
-# Docker example for Agora
+# 🐋 - Docker example on an atlas-like
 
 `front/` is a Nuxt
 `back/` is a Laravel
